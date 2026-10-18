@@ -1,0 +1,40 @@
+name: tg-monitor
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: tg-monitor
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install telethon
+
+      - name: Restore state
+        uses: actions/cache@v4
+        with:
+          path: state
+          key: tgstate-${{ github.run_id }}
+          restore-keys: tgstate-
+
+      - name: Run monitor
+        run: python tg_actions.py
+        env:
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          TG_SESSION: ${{ secrets.TG_SESSION }}
+          TG_CHATS: ${{ secrets.TG_CHATS }}
+          VK_COMMUNITY_KEY: ${{ secrets.VK_COMMUNITY_KEY }}
+          VK_USER_ID: ${{ secrets.VK_USER_ID }}

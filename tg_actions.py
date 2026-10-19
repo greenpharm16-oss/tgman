@@ -11,7 +11,7 @@ from telethon.sessions import StringSession
 
 API_ID = int(os.environ["TG_API_ID"])
 API_HASH = os.environ["TG_API_HASH"]
-SESSION = os.environ["TG_SESSION"]
+SESSION = "".join(os.environ["TG_SESSION"].split())
 VK_KEY = os.environ["VK_COMMUNITY_KEY"]
 VK_USER_ID = int(os.environ["VK_USER_ID"])
 
